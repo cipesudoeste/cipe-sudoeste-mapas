@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>CIPE Sudoeste — Área de Responsabilidade</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,53 +14,95 @@
 <div id="app">
   <div class="camo-trim camo-bg"></div>
   <div id="app-body">
-  <aside id="sidebar">
-    <div class="brand">
+
+    <!-- Topbar — visível apenas em telas pequenas -->
+    <header class="topbar">
       <a class="home-btn" href="index.html" title="Voltar para a página inicial">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
           <path d="M3 11l9-7 9 7" stroke-linecap="round" stroke-linejoin="round"/>
           <path d="M5 10v9a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1v-9" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </a>
-      <img class="logo-cipe" src="img/logo-cipe.png" alt="CIPE Sudoeste">
-      <div class="logo-pmba-chip"><img src="img/logo-pmba.png" alt="Polícia Militar da Bahia"></div>
-      <div class="brand-text">
-        <div class="eyebrow">Polícia Militar · Bahia</div>
-        <div class="title">CIPE Sudoeste</div>
+      <img class="logo-cipe-sm" src="img/logo-cipe.png" alt="CIPE Sudoeste">
+      <div class="topbar-text">
+        <div class="eyebrow">Mapa 01 de 03</div>
+        <div class="title">Área de Responsabilidade</div>
       </div>
+      <div class="logo-pmba-chip"><img src="img/logo-pmba.png" alt="Polícia Militar da Bahia"></div>
+    </header>
+
+    <!-- Gaveta de filtros (mobile) / barra lateral fixa (desktop) -->
+    <aside id="sidebar">
+      <div class="sheet-handle" id="sheet-handle">
+        <div class="sheet-handle-bar"></div>
+        <div class="swatch-stack">
+          <span style="background:#c9863f"></span>
+          <span style="background:#4a93a8"></span>
+          <span style="background:#93a84f"></span>
+          <span style="background:#8a5380"></span>
+        </div>
+        <div class="sheet-handle-label">Filtros e legenda<small>64 municípios · 4 territórios</small></div>
+        <svg class="sheet-chev" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+
+      <div class="sheet-scroll">
+        <div class="brand">
+          <a class="home-btn" href="index.html" title="Voltar para a página inicial">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M3 11l9-7 9 7" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M5 10v9a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1v-9" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+          <img class="logo-cipe" src="img/logo-cipe.png" alt="CIPE Sudoeste">
+          <div class="logo-pmba-chip"><img src="img/logo-pmba.png" alt="Polícia Militar da Bahia"></div>
+          <div class="brand-text">
+            <div class="eyebrow">Polícia Militar · Bahia</div>
+            <div class="title">CIPE Sudoeste</div>
+          </div>
+        </div>
+
+        <div class="page-head">
+          <div class="eyebrow">Mapa 01 de 03</div>
+          <h1>Área de Responsabilidade</h1>
+          <p>Macrorregiões, territórios de identidade e municípios sob responsabilidade da unidade.</p>
+        </div>
+
+        <div class="stat-row">
+          <div class="stat"><div class="n">64</div><div class="l">Municípios</div></div>
+          <div class="stat"><div class="n">4</div><div class="l">Territórios</div></div>
+          <div class="stat"><div class="n">2</div><div class="l">Macrorregiões</div></div>
+        </div>
+
+        <div class="section-label">Filtrar por região</div>
+        <div class="tree" id="tree"></div>
+
+        <div class="legend">
+          <div class="legend-title">Legenda · Territórios</div>
+          <div id="legend-list"></div>
+        </div>
+
+        <div class="sidebar-foot">
+          Fonte: malha municipal IBGE 2025 (BA_Municipios_2025). Classificação por Território de Identidade — SEI/Bahia.
+        </div>
+      </div>
+    </aside>
+
+    <div id="map-wrap">
+      <div id="map"></div>
+
+      <button class="layer-btn" id="layer-btn" title="Mudar mapa-base" aria-label="Mudar mapa-base">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+          <path d="M12 3 2 8l10 5 10-5-10-5Z" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M2 13l10 5 10-5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M2 18l10 5 10-5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="layer-panel" id="layer-panel"></div>
+
+      <div class="map-title-overlay"><b>CIPE-SO</b> · Área de Responsabilidade — Regiões</div>
+      <div class="hud" id="hud">lat <span id="hud-lat">—</span>&nbsp;&nbsp;lon <span id="hud-lon">—</span>&nbsp;&nbsp;zoom <span id="hud-zoom">—</span></div>
     </div>
 
-    <div class="page-head">
-      <div class="eyebrow">Mapa 01 de 03</div>
-      <h1>Área de Responsabilidade</h1>
-      <p>Macrorregiões, territórios de identidade e municípios sob responsabilidade da unidade.</p>
-    </div>
-
-    <div class="stat-row">
-      <div class="stat"><div class="n">64</div><div class="l">Municípios</div></div>
-      <div class="stat"><div class="n">4</div><div class="l">Territórios</div></div>
-      <div class="stat"><div class="n">2</div><div class="l">Macrorregiões</div></div>
-    </div>
-
-    <div class="section-label">Filtrar por região</div>
-    <div class="tree" id="tree"></div>
-
-    <div class="legend">
-      <div class="legend-title">Legenda · Territórios</div>
-      <div id="legend-list"></div>
-    </div>
-
-    <div class="sidebar-foot">
-      Fonte: malha municipal IBGE 2025 (BA_Municipios_2025). Classificação por Território de Identidade — SEI/Bahia.
-    </div>
-  </aside>
-
-  <div id="map-wrap">
-    <button id="menu-btn">☰</button>
-    <div class="map-title-overlay"><b>CIPE-SO</b> · Área de Responsabilidade — Regiões</div>
-    <div id="map"></div>
-    <div class="hud" id="hud">lat <span id="hud-lat">—</span>&nbsp;&nbsp;lon <span id="hud-lon">—</span>&nbsp;&nbsp;zoom <span id="hud-zoom">—</span></div>
-  </div>
   </div>
 </div>
 
@@ -79,28 +121,88 @@ const TERRITORIOS = {
 const MACRO_ORDER = ["MEIO-OESTE","SUDOESTE"];
 
 /* ---------------------------------------------------------
+   Mapas-base disponíveis
+--------------------------------------------------------- */
+const BASEMAPS = [
+  { id:"dark",      name:"Escuro (operacional)", swatch:"#2c2f25",
+    url:"https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png",
+    attribution:"&copy; OpenStreetMap &copy; CARTO", subdomains:"abcd" },
+  { id:"light",     name:"Claro", swatch:"#d8d4c6",
+    url:"https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png",
+    attribution:"&copy; OpenStreetMap &copy; CARTO", subdomains:"abcd" },
+  { id:"streets",   name:"Ruas", swatch:"#a9c4e0",
+    url:"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    attribution:"&copy; OpenStreetMap colaboradores", subdomains:"abc" },
+  { id:"satellite", name:"Satélite", swatch:"#4a5a3a",
+    url:"https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+    attribution:"&copy; Esri, Maxar, Earthstar Geographics", subdomains:"" },
+];
+const BASEMAP_STORAGE_KEY = "cipe-so-basemap";
+
+/* ---------------------------------------------------------
    Mapa base
 --------------------------------------------------------- */
 const map = L.map('map', {
-  zoomControl:true,
+  zoomControl:false,
   attributionControl:true,
   minZoom:6,
-  maxZoom:12,
+  maxZoom:19,
 }).setView([-13.9, -41.6], 7);
 
-L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
-  attribution:'&copy; OpenStreetMap &copy; CARTO',
-  subdomains:'abcd',
-  maxZoom:19,
-}).addTo(map);
-
+L.control.zoom({ position:'bottomright' }).addTo(map);
 L.control.scale({ position:'bottomleft', imperial:false }).addTo(map);
+
+let currentBaseLayer = null;
+function setBasemap(id){
+  const def = BASEMAPS.find(b => b.id === id) || BASEMAPS[0];
+  if (currentBaseLayer) map.removeLayer(currentBaseLayer);
+  currentBaseLayer = L.tileLayer(def.url, {
+    attribution: def.attribution,
+    subdomains: def.subdomains || undefined,
+    maxZoom: 19,
+  });
+  currentBaseLayer.addTo(map);
+  currentBaseLayer.bringToBack();
+  document.querySelectorAll('.layer-option').forEach(el => {
+    el.classList.toggle('active', el.dataset.id === id);
+  });
+  try { localStorage.setItem(BASEMAP_STORAGE_KEY, id); } catch(e) {}
+}
+
+let savedBasemap = "dark";
+try { savedBasemap = localStorage.getItem(BASEMAP_STORAGE_KEY) || "dark"; } catch(e) {}
+setBasemap(savedBasemap);
+
+/* Painel seletor de mapa-base */
+const layerBtn = document.getElementById('layer-btn');
+const layerPanel = document.getElementById('layer-panel');
+BASEMAPS.forEach(b => {
+  const opt = document.createElement('div');
+  opt.className = 'layer-option';
+  opt.dataset.id = b.id;
+  opt.innerHTML = `<span class="layer-swatch" style="background:${b.swatch}"></span><span>${b.name}</span>`;
+  opt.addEventListener('click', () => { setBasemap(b.id); layerPanel.classList.remove('open'); layerBtn.classList.remove('open'); });
+  layerPanel.appendChild(opt);
+});
+document.querySelectorAll('.layer-option').forEach(el => el.classList.toggle('active', el.dataset.id === savedBasemap));
+
+layerBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  layerPanel.classList.toggle('open');
+  layerBtn.classList.toggle('open');
+});
+document.addEventListener('click', (e) => {
+  if (!layerPanel.contains(e.target) && e.target !== layerBtn) {
+    layerPanel.classList.remove('open');
+    layerBtn.classList.remove('open');
+  }
+});
 
 /* ---------------------------------------------------------
    Camadas por território
 --------------------------------------------------------- */
-const layersByTerr = {};   // territorio -> L.geoJSON layer
-const labelsByTerr  = {};  // territorio -> L.layerGroup of label markers
+const layersByTerr = {};
+const labelsByTerr  = {};
 const countByTerr   = {};
 
 function popupHtml(p){
@@ -119,7 +221,6 @@ function styleFor(territorio){
 }
 
 Object.keys(TERRITORIOS).forEach(t => countByTerr[t] = 0);
-
 DATA_REGIOES.features.forEach(f => countByTerr[f.properties.territorio]++);
 
 Object.keys(TERRITORIOS).forEach(terr => {
@@ -150,20 +251,17 @@ Object.keys(TERRITORIOS).forEach(terr => {
   labelsByTerr[terr] = labelGroup;
 });
 
-/* Esconde rótulos quando o zoom está muito baixo para reduzir poluição visual */
 function updateLabelVisibility(){
   const show = map.getZoom() >= 8;
-  Object.values(labelsByTerr).forEach(group => {
-    document.querySelectorAll('.muni-label').forEach(el => {
-      el.style.display = show ? 'block' : 'none';
-    });
+  document.querySelectorAll('.muni-label').forEach(el => {
+    el.style.display = show ? 'block' : 'none';
   });
 }
 map.on('zoomend', updateLabelVisibility);
 updateLabelVisibility();
 
 /* ---------------------------------------------------------
-   HUD de coordenadas
+   HUD de coordenadas (telas largas)
 --------------------------------------------------------- */
 map.on('mousemove', e => {
   document.getElementById('hud-lat').textContent = e.latlng.lat.toFixed(3);
@@ -219,7 +317,6 @@ MACRO_ORDER.forEach(macro => {
   block.appendChild(terrList);
   treeEl.appendChild(block);
 
-  // colapsar/expandir ao clicar no chevron / nome (não no checkbox)
   const chev = macroRow.querySelector('.chev');
   const toggleCollapse = () => {
     chev.classList.toggle('collapsed');
@@ -232,9 +329,9 @@ MACRO_ORDER.forEach(macro => {
   const terrCbs = () => Array.from(terrList.querySelectorAll('input[data-terr]'));
 
   function setTerrVisible(terr, visible){
-    const map_ = visible ? add => add.addTo(map) : add => map.removeLayer(add);
-    map_(layersByTerr[terr]);
-    map_(labelsByTerr[terr]);
+    const apply = visible ? lyr => lyr.addTo(map) : lyr => map.removeLayer(lyr);
+    apply(layersByTerr[terr]);
+    apply(labelsByTerr[terr]);
   }
 
   macroCb.addEventListener('change', () => {
@@ -254,11 +351,12 @@ MACRO_ORDER.forEach(macro => {
 });
 
 /* ---------------------------------------------------------
-   Menu mobile
+   Gaveta de filtros (sheet) — abrir/fechar no mobile
 --------------------------------------------------------- */
-document.getElementById('menu-btn').addEventListener('click', () => {
-  document.getElementById('sidebar').classList.toggle('open');
-});
+const sidebarEl = document.getElementById('sidebar');
+const sheetHandle = document.getElementById('sheet-handle');
+sheetHandle.addEventListener('click', () => sidebarEl.classList.toggle('expanded'));
+map.on('click', () => sidebarEl.classList.remove('expanded'));
 </script>
 </body>
 </html>
